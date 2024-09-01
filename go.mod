@@ -1,4 +1,4 @@
-module github/mcnull/go-lorem
+module github.com/mcnull/go-lorem
 
 go 1.22.6
 
