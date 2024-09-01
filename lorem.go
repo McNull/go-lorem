@@ -5,97 +5,41 @@
 package lorem
 
 import (
-	"math/rand"
+	"math/rand/v2"
 	"strings"
 )
 
-// Generate a natural word len.
-func genWordLen() int {
-	f := rand.Float32() * 100
-	// a table of word lengths and their frequencies.
-	switch {
-	case f < 1.939:
-		return 1
-	case f < 19.01:
-		return 2
-	case f < 38.00:
-		return 3
-	case f < 50.41:
-		return 4
-	case f < 61.00:
-		return 5
-	case f < 70.09:
-		return 6
-	case f < 78.97:
-		return 7
-	case f < 85.65:
-		return 8
-	case f < 90.87:
-		return 9
-	case f < 95.05:
-		return 10
-	case f < 97.27:
-		return 11
-	case f < 98.67:
-		return 12
-	case f < 100.0:
-		return 13
-	}
-	return 2 // shouldn't get here
+type Lorem struct {
+	rnd *rand.Rand
 }
 
-func intRange(min, max int) int {
-	if min == max {
-		return intRange(min, min+1)
-	}
-	if min > max {
-		return intRange(max, min)
-	}
-	n := rand.Int() % (max - min)
-	return n + min
+func New() *Lorem {
+	return &Lorem{rand.New(rand.NewPCG(rand.Uint64(), rand.Uint64()))}
 }
 
-func word(wordLen int) string {
-	if wordLen < 1 {
-		wordLen = 1
-	}
-	if wordLen > 13 {
-		wordLen = 13
-	}
-
-	n := rand.Int() % len(wordlist)
-	for {
-		if n >= len(wordlist)-1 {
-			n = 0
-		}
-		if len(wordlist[n]) == wordLen {
-			return wordlist[n]
-		}
-		n++
-	}
-	return ""
+func NewSeeded(seed1 uint64, seed2 uint64) *Lorem {
+	return &Lorem{rand.New(rand.NewPCG(seed1, seed2))}
 }
 
 // Generate a word in a specfied range of letters.
-func Word(min, max int) string {
-	n := intRange(min, max)
-	return word(n)
+func (l *Lorem) Word(min, max int) string {
+	n := l.intRange(min, max)
+	return l.word(n)
 }
 
 // Generate a sentence with a specified range of words.
-func Sentence(min, max int) string {
-	n := intRange(min, max)
-
+func (l *Lorem) Sentence(min, max int) string {
+	n := l.intRange(min, max)
 	// grab some words
 	ws := []string{}
 	maxcommas := 2
 	numcomma := 0
 	for i := 0; i < n; i++ {
-		ws = append(ws, (word(genWordLen())))
+		ws = append(ws, (l.word(l.genWordLen())))
 
 		// maybe insert a comma, if there are currently < 2 commas, and
 		// the current word is not the last or first
-		if (rand.Int()%n == 0) && numcomma < maxcommas && i < n-1 && i > 2 {
+		if (l.rnd.Int()%n == 0) && numcomma < maxcommas && i < n-1 && i > 2 {
 			ws[i-1] += ","
 			numcomma += 1
 		}
@@ -113,36 +57,36 @@ const (
 	maxwords = 22
 )
 
-func Paragraph(min, max int) string {
-	n := intRange(min, max)
+func (l *Lorem) Paragraph(min, max int) string {
+	n := l.intRange(min, max)
 
 	p := []string{}
 	for i := 0; i < n; i++ {
-		p = append(p, Sentence(minwords, maxwords))
+		p = append(p, l.Sentence(minwords, maxwords))
 	}
 	return strings.Join(p, " ")
 }
 
 // Generate a random URL
-func Url() string {
-	n := intRange(0, 3)
+func (l *Lorem) Url() string {
+	n := l.intRange(0, 3)
 
-	base := `http://www.` + Host()
+	base := `http://www.` + l.Host()
 
 	switch n {
 	case 0:
 		break
 	case 1:
-		base += "/" + Word(2, 8)
+		base += "/" + l.Word(2, 8)
 	case 2:
-		base += "/" + Word(2, 8) + "/" + Word(2, 8) + ".html"
+		base += "/" + l.Word(2, 8) + "/" + l.Word(2, 8) + ".html"
 	}
 	return base
 }
 
 // Host
-func Host() string {
-	n := intRange(0, 3)
+func (l *Lorem) Host() string {
+	n := l.intRange(0, 3)
 	tld := ""
 	switch n {
 	case 0:
@@ -153,11 +97,16 @@ func Host() string {
 		tld = ".org"
 	}
 
-	parts := []string{Word(2, 8), Word(2, 8), tld}
+	parts := []string{l.Word(2, 8), l.Word(2, 8), tld}
 	return strings.Join(parts, ``)
 }
 
 // Email
-func Email() string {
-	return Word(4, 10) + `@` + Host()
+func (l *Lorem) Email() string {
+	return l.Word(4, 10) + `@` + l.Host()
+}
+
+func (l *Lorem) UUID() string {
+	id := RandomUUID(l.rnd)
+	return id.String()
 }

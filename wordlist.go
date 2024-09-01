@@ -1925,6 +1925,7 @@ mare
 maris
 mavult
 maxime
+mcnull
 me
 mea
 meae
@@ -2201,8 +2202,10 @@ novit
 novum
 nuda
 nugatoriis
+null
 nulla
 nullam
+nullest
 nullo
 nullum
 num
