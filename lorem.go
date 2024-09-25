@@ -27,6 +27,14 @@ func (l *Lorem) Word(min, max int) string {
 	return l.word(n)
 }
 
+func (l *Lorem) Words(n, min, max int) []string {
+	words := []string{}
+	for i := 0; i < n; i++ {
+		words = append(words, l.Word(min, max))
+	}
+	return words
+}
+
 // Generate a sentence with a specified range of words.
 func (l *Lorem) Sentence(min, max int) string {
 	n := l.intRange(min, max)
