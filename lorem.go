@@ -110,3 +110,35 @@ func (l *Lorem) UUID() string {
 	id := RandomUUID(l.Randomizer)
 	return id.String()
 }
+
+//////////////////////////
+// Pick: string
+//////////////////////////
+
+func (l *Lorem) PickString(arr []string) string {
+	return Pick(l.Randomizer, arr)
+}
+
+func (l *Lorem) PickStrings(arr []string, n int) []string {
+	return PickMultiple(l.Randomizer, arr, n)
+}
+
+func (l *Lorem) PickUniqueStrings(arr []string, n int) []string {
+	return PickUnique(l.Randomizer, arr, n)
+}
+
+//////////////////////////
+// Pick: int
+//////////////////////////
+
+func (l *Lorem) PickInt(arr []int) int {
+	return Pick(l.Randomizer, arr)
+}
+
+func (l *Lorem) PickInts(arr []int, n int) []int {
+	return PickMultiple(l.Randomizer, arr, n)
+}
+
+func (l *Lorem) PickUniqueInts(arr []int, n int) []int {
+	return PickUnique(l.Randomizer, arr, n)
+}

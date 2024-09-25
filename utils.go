@@ -87,3 +87,70 @@ func RandomUUID(rnd *rand.Rand) uuid.UUID {
 
 	return u
 }
+
+func Pick[T any](r *rand.Rand, arr []T) T {
+	l := len(arr)
+	idx := r.IntN(l)
+	return arr[idx]
+}
+
+func PickMultiple[T any](r *rand.Rand, arr []T, n int) []T {
+	if n < 1 {
+		return []T{}
+	}
+
+	x := make([]T, n)
+	l := len(arr)
+
+	for i := 0; i < n; i++ {
+		x[i] = arr[r.IntN(l)]
+	}
+
+	return x
+}
+
+func GenerateUniqueRandomInts(r *rand.Rand, max, n int) []int {
+	if n > max+1 {
+		n = max + 1
+	}
+	if n < 1 {
+		return []int{}
+	}
+
+	// Create a slice containing a range of integers from 0 to max
+	arr := make([]int, max+1)
+	for i := 0; i <= max; i++ {
+		arr[i] = i
+	}
+
+	// Shuffle the slice using the Fisher-Yates shuffle algorithm
+
+	for i := max; i > 0; i-- {
+		j := r.IntN(i + 1)
+		arr[i], arr[j] = arr[j], arr[i]
+	}
+
+	// Return the first n elements of the shuffled slice
+	return arr[:n]
+}
+
+func PickUnique[T any](r *rand.Rand, arr []T, n int) []T {
+	l := len(arr)
+	if n > l {
+		n = l
+	}
+	if n < 1 {
+		return []T{}
+	}
+
+	// Create a slice containing a range of integers from 0 to len(arr) - 1
+	indices := GenerateUniqueRandomInts(r, l-1, l)
+
+	x := make([]T, n)
+
+	for i := 0; i < n; i++ {
+		x[i] = arr[indices[i]]
+	}
+
+	return x
+}

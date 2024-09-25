@@ -69,4 +69,19 @@ func TestLorem(t *testing.T) {
 
 		})
 	})
+
+	t.Run("Pick", func(t *testing.T) {
+
+		lm := New()
+
+		arr := []string{"a", "b", "c", "d", "e"}
+
+		p := lm.PickString(arr)
+
+		if p == "" {
+			t.Errorf("Expected %s to be in %v", p, arr)
+		}
+
+	})
+
 }
