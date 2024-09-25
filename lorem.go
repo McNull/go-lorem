@@ -10,7 +10,7 @@ import (
 )
 
 type Lorem struct {
-	rnd *rand.Rand
+	Randomizer *rand.Rand
 }
 
 func New() *Lorem {
@@ -39,7 +39,7 @@ func (l *Lorem) Sentence(min, max int) string {
 
 		// maybe insert a comma, if there are currently < 2 commas, and
 		// the current word is not the last or first
-		if (l.rnd.Int()%n == 0) && numcomma < maxcommas && i < n-1 && i > 2 {
+		if (l.Randomizer.Int()%n == 0) && numcomma < maxcommas && i < n-1 && i > 2 {
 			ws[i-1] += ","
 			numcomma += 1
 		}
@@ -107,6 +107,6 @@ func (l *Lorem) Email() string {
 }
 
 func (l *Lorem) UUID() string {
-	id := RandomUUID(l.rnd)
+	id := RandomUUID(l.Randomizer)
 	return id.String()
 }

@@ -8,7 +8,7 @@ import (
 
 // Generate a natural word len.
 func (l *Lorem) genWordLen() int {
-	f := l.rnd.Float32() * 100
+	f := l.Randomizer.Float32() * 100
 	// a table of word lengths and their frequencies.
 	switch {
 	case f < 1.939:
@@ -48,7 +48,7 @@ func (l *Lorem) intRange(min, max int) int {
 	if min > max {
 		return l.intRange(max, min)
 	}
-	n := l.rnd.Int() % (max - min)
+	n := l.Randomizer.Int() % (max - min)
 	return n + min
 }
 
@@ -60,7 +60,7 @@ func (l *Lorem) word(wordLen int) string {
 		wordLen = 13
 	}
 
-	n := l.rnd.Int() % len(wordlist)
+	n := l.Randomizer.Int() % len(wordlist)
 	for {
 		if n >= len(wordlist)-1 {
 			n = 0
